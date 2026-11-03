@@ -35,9 +35,35 @@ def dm01():
     content='传智教育是一家上市公司，旗下有黑马程序员品牌。我是在黑马这里学习人工智能'
 
     # 2.使用jieba进行 精确模式分词(默认模式) -> cut_all=False
-    # result1:生成器对象,
+    # result1:生成器对象,好处：节省内存，只能遍历一次
     result1=jieba.cut(content,cut_all=False)
+    print(f'result:{result1}')
+
+    # 3.从生成器对象中,获取所有的分词结果.
+    # 3.1 思路1:next()函数,逐个获取下个元素
+    print(next(result1))
+    print(next(result1))
+    print(' -.- '*10)
+
+    # 3.2 思路2:遍历方式,从生成器中获取元素
+    for item in result1:
+        print(item)
+    print(' =.= '*10)
+
+    # 4.如果要列表怎么办? 即:[词1,词2,词3...]
+    # 思路1:直接把上述的生成器 -> 转成 列表
+    list1=list(result1)
+    print(f'list1:{list1}')
+
+    # 思路2:切词时,直接返回list,相当于:语法糖.
+    list2=jieba.lcut(content,cut_all=False)
+    print(f'list2:{list2}')
 
 
+# todo 6.测试代码
+if __name__ == '__main__':
+    import jieba
+    print(jieba.__file__)
+    dm01()
 
 
