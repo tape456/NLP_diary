@@ -1,2 +1,2 @@
 # NLP_diary
-It's about NLP learning.
+It's about NLP learning's **code**.
