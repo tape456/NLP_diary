@@ -29,15 +29,15 @@
 # 导包
 import jieba
 
-# todo 1.定义函数，演示jieba精确分词模式，适用于：文本分析
+# todo 1.定义函数，演示jieba精确模式分词，适用于：文本分析
 def dm01():
     # 1.定义待分词的文本内容
     content='传智教育是一家上市公司，旗下有黑马程序员品牌。我是在黑马这里学习人工智能'
 
     # 2.使用jieba进行 精确模式分词(默认模式) -> cut_all=False
     # result1:生成器对象,好处：节省内存，只能遍历一次
-    result1=jieba.cut(content,cut_all=False)
-    print(f'result:{result1}')
+    result1=jieba.cut(content,cut_all=False) # result1:<generator object Tokenizer.cut at 0x000001C14FB58DD0>
+    print(f'result1:{result1}')
 
     # 3.从生成器对象中,获取所有的分词结果.
     # 3.1 思路1:next()函数,逐个获取下个元素
@@ -51,19 +51,50 @@ def dm01():
     print(' =.= '*10)
 
     # 4.如果要列表怎么办? 即:[词1,词2,词3...]
-    # 思路1:直接把上述的生成器 -> 转成 列表
-    list1=list(result1)
+    # 思路1:把生成器 -> 转成 列表
+    # 注意:生成器只能遍历一次,上面的 result1 已被 next()和 for 取空了,
+    #      此时 list(result1) 只会得到 [],所以这里重新切一次,拿到新的生成器再转列表.
+    list1=list(jieba.cut(content,cut_all=False))
     print(f'list1:{list1}')
 
     # 思路2:切词时,直接返回list,相当于:语法糖.
     list2=jieba.lcut(content,cut_all=False)
     print(f'list2:{list2}')
 
+# todo 2.定义函数，演示jieba全模式分词，适用于：关键词提取，不需要 严格分词准确性的场景
+def dm02():
+    # 1.定义待分词的文本内容
+    content='传智教育是一家上市公司，旗下有黑马程序员品牌。我是在黑马这里学习人工智能'
+
+    # 2.使用jieba进行 全模式分词 -> cut_all=True
+    # result1:生成器对象,好处：节省内存，只能遍历一次
+    result1=jieba.cut(content,cut_all=True)
+    print(f'result1:{result1}')
+
+    # 3.从生成器对象中,获取所有的分词结果.
+    # 3.1 思路1:next()函数,逐个获取下个元素
+    print(next(result1))
+    print(next(result1))
+    print(' -.- '*10)
+
+    # 3.2 思路2:遍历方式,从生成器中获取元素
+    for item in result1:
+        print(item)
+    print(' =.= '*10)
+
+    # 4.如果要列表怎么办? 即:[词1,词2,词3...]
+    # 思路1:把生成器 -> 转成 列表(同理:生成器已被取空,需要重新切一次)
+    list1=list(jieba.cut(content,cut_all=True))
+    print(f'list1:{list1}')
+
+    # 思路2:切词时,直接返回list,相当于:语法糖. 全模式对应的仍是 cut_all=True
+    list2=jieba.lcut(content,cut_all=True)
+    print(f'list2:{list2}')
+
+
 
 # todo 6.测试代码
 if __name__ == '__main__':
-    import jieba
-    print(jieba.__file__)
     dm01()
 
 
