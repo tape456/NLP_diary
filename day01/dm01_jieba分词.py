@@ -84,17 +84,86 @@ def dm02():
 
     # 4.如果要列表怎么办? 即:[词1,词2,词3...]
     # 思路1:把生成器 -> 转成 列表(同理:生成器已被取空,需要重新切一次)
-    list1=list(jieba.cut(content,cut_all=True))
+    list1=list(result1)
     print(f'list1:{list1}')
 
     # 思路2:切词时,直接返回list,相当于:语法糖. 全模式对应的仍是 cut_all=True
     list2=jieba.lcut(content,cut_all=True)
     print(f'list2:{list2}')
 
+# todo 3.定义函数，演示jieba搜索引擎模式，适用于：搜索引擎分词，文本匹配
+"""
+解释：
+    搜索引擎分词模式 -> 在精确模式分词的基础上,对 长词 进行再次切分,提高召回率
+例如:
+    场景1:用户录入"程序员"
+        精确模式:只能匹配包含完整"程序员"的文档.
+        搜索引擎模式:不仅能匹配"程序员"文档,还能匹配"程序","员"的文档,提高召回
+        
+    场景2:实际应用场景(电商搜索),商品标题为: 苹果手机保护套 ,用户搜索<苹果套>
+        精确模式:无法匹配,分词为:("苹果","手机","保护套")
+        搜索引擎模式:能匹配,分词为:("苹果","手机","保护","套")
+"""
+
+def dm03():
+    # 1.定义待分词的文本内容
+    content='传智教育是一家上市公司，旗下有黑马程序员品牌。我是在黑马这里学习人工智能'
+
+    # 2.使用jieba进行 搜索引擎模式分词 -> cut_for_search()
+    # result1:生成器对象,好处：节省内存，只能遍历一次
+    result1=jieba.cut_for_search(content)
+    print(f'result1:{result1}')     # 生成器对象
+
+    # 3.从生成器对象中,获取所有的分词结果.
+    # 3.1 思路1:next()函数,逐个获取下个元素
+    print(next(result1))
+    print(next(result1))
+    print(' -.- '*10)
+
+    # 3.2 思路2:遍历方式,从生成器中获取元素
+    for item in result1:
+        print(item)
+    print(' =.= '*10)
+
+    # 4.如果要列表怎么办? 即:[词1,词2,词3...]
+    # 思路1:把生成器 -> 转成 列表(同理:生成器已被取空,需要重新切一次)
+    list1=list(result1)
+    print(f'list1:{list1}')
+
+    # 思路2:切词时,直接返回list,相当于:语法糖. 全模式对应的仍是 cut_all=True
+    list2=jieba.lcut_for_search(content)
+    print(f'list2(搜索引擎模式):{list2}')
+
+    # 5.扩展:打印下 精确模式分词,全模式分词,以便和上述的 搜索引擎模式分词进行对比
+    list3=jieba.lcut(content,cut_all=False)
+    print(f'list3(精确模式):{list3}')
+
+    list4=jieba.lcut(content,cut_all=True)
+    print(f'list4(全模式):{list4}')
+
+# todo 4.定义函数，演示jieba分词之 繁体字
+def dm04():
+    # 1.定义句子，记录要被分词的内容
+    content='煩惱即是菩提，我暫且不提'
+
+    # 2.使用jieba进行 繁体字分词
+    result=jieba.lcut(content,cut_all=True)  # 精确模式
+
+    # 3.打印结果
+    print(result)
+
+
 
 
 # todo 6.测试代码
 if __name__ == '__main__':
-    dm01()
+    # 1.测试：jieba的精确模式分词
+    # dm01()
+
+    # 2.测试：jieba的全模式分词
+    # dm02()
+
+    # 3.测试：jieba的搜索引擎模式分词
+    dm03()
 
 
